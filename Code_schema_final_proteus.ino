@@ -34,12 +34,12 @@ int soilPin  = A2;
 int pompePin = 4;
 bool pompeActive = false;
 
-// ======== LCD screen toggle ========
+// ======== Alternance des écrans LCD ========
 bool showScreen1 = true;
 unsigned long lastSwitch = 0;
 #define SCREEN_INTERVAL 1000
 
-// ======== Servo state ========
+// ======== État du servo ========
 Servo myServo;
 bool windowOpen     = false;
 bool buzzer_sounded = false;
@@ -122,7 +122,7 @@ void loop() {
   int soilHumidity = map(soilRaw, 1023, 0, 0, 100);
   soilHumidity     = constrain(soilHumidity, 0, 100);
 
-  // ---- LDR / Lamp ----
+  // ---- LDR / Lampe ----
   digitalWrite(lampPin, ldrValue < seuilLDR ? HIGH : LOW);
 
   // ---- Pompe ----
@@ -145,7 +145,7 @@ void loop() {
     digitalWrite(ledPin3, HIGH);
   }
 
-  // ---- Cherjem / Fan / Buzzer ----
+  // ---- Fenêtre / Ventilateur / Buzzer ----
   bool co2High = (co2 > CO2_THRESHOLD);
   if (co2High || temperature > 25 || humidity < 40 || humidity > 80) {
     openWindow();
@@ -153,7 +153,7 @@ void loop() {
     closeWindow();
   }
 
-  // ---- Serial ----
+  // ---- Moniteur série ----
   Serial.print("Temp: ");      Serial.print(temperature);
   Serial.print(" | Hum: ");    Serial.print(humidity);
   Serial.print(" | CO2: ");    Serial.print(co2);
@@ -161,7 +161,7 @@ void loop() {
   Serial.print(" | Soil: ");   Serial.print(soilHumidity);
   Serial.print("% | Pompe: "); Serial.println(pompeActive ? "ON" : "OFF");
 
-  // ---- LCD switch ----
+  // ---- Alternance écran LCD ----
   if (now - lastSwitch >= SCREEN_INTERVAL) {
     lastSwitch  = now;
     showScreen1 = !showScreen1;
@@ -169,7 +169,7 @@ void loop() {
   }
 
   if (showScreen1) {
-    // Screen 1: Temp + Hum + CO2
+    // Écran 1 : Temp + Hum + CO2
     lcd.setCursor(0, 0);
     lcd.print("T:");
     lcd.print(temperature, 1);
@@ -189,7 +189,7 @@ void loop() {
       lcd.print(" PPM  ");
     }
   } else {
-    // Screen 2: LDR + Soil
+    // Écran 2 : LDR + Sol
     lcd.setCursor(0, 0);
     lcd.print("LDR:");
     lcd.print(ldrValue);

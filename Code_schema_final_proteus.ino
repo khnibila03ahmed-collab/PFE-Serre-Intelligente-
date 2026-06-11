@@ -41,15 +41,15 @@ unsigned long lastSwitch = 0;
 
 // ======== Servo state ========
 Servo myServo;
-bool cherjem_mhlol  = false;
+bool windowOpen     = false;
 bool buzzer_sounded = false;
 
 // ======== openWindow ========
 void openWindow() {
-  if (!cherjem_mhlol) {
+  if (!windowOpen) {
     myServo.write(135);
     delay(500);
-    cherjem_mhlol  = true;
+    windowOpen     = true;
     buzzer_sounded = false;
   }
   digitalWrite(fanPin, HIGH);
@@ -63,10 +63,10 @@ void openWindow() {
 
 // ======== closeWindow ========
 void closeWindow() {
-  if (cherjem_mhlol) {
+  if (windowOpen) {
     myServo.write(0);
     delay(500);
-    cherjem_mhlol  = false;
+    windowOpen     = false;
     buzzer_sounded = false;
   }
   digitalWrite(fanPin,    LOW);

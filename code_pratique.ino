@@ -44,18 +44,18 @@ bool co2AlarmActive = false;
 char Incoming_value = 0;
 bool modeManuel = false;
 
-// ======== timing dyal CO2 beep intermittent ========
+// ======== Gestion du bip CO2 intermittent ========
 unsigned long lastBeepTime = 0;
 bool beepState = false;
 
 #define BEEP_ON  300
 #define BEEP_OFF 300
 
-// ======== [FIX] timing dyal beepOpen non-bloquant ========
+// ======== Gestion non bloquante du bip d'ouverture ========
 unsigned long beepOpenStart = 0;
 bool beepOpenActive = false;
 
-// ======== startBeepOpen: bdl delay(2000) ========
+// ======== startBeepOpen : remplace l'ancien delay(2000) ========
 void startBeepOpen() {
   digitalWrite(buzzerPin, LOW);
   beepOpenStart = millis();
@@ -70,11 +70,11 @@ void openWindow() {
     windowOpen = true;
 
     if (!co2AlarmActive) {
-      startBeepOpen(); // [FIX] bdlna beepOpen() b startBeepOpen()
+      startBeepOpen(); // [FIX] remplace l'appel à beepOpen() par startBeepOpen()
     }
   }
 
-  // Relay inverse: LOW = ON
+  // Relais inversé : LOW = ON
   digitalWrite(fanPin, LOW);
 }
 
@@ -86,7 +86,7 @@ void closeWindow() {
     windowOpen = false;
   }
 
-  // Relay inverse: HIGH = OFF
+  // Relais inversé : HIGH = OFF
   digitalWrite(fanPin, HIGH);
 }
 
@@ -105,7 +105,7 @@ void setup() {
   digitalWrite(ledPin2, LOW);
   digitalWrite(ledPin3, LOW);
 
-  // ===== Relay inverse =====
+  // ===== Relais inversé =====
   digitalWrite(fanPin, HIGH);
   digitalWrite(lampPin, HIGH);
   digitalWrite(pompePin, HIGH);
@@ -209,9 +209,9 @@ if (Serial.available() > 0)
       }
       break;
   }
-}   // ← زيد هاد القوس هنا
+}   // ← ajouter cette accolade ici
 
-  // ===== [FIX] Gestion beepOpen non-bloquant =====
+  // ===== [FIX] Gestion non bloquante du bip d'ouverture =====
   if (beepOpenActive && (now - beepOpenStart >= 2000)) {
     beepOpenActive = false;
     if (!co2AlarmActive) {
@@ -235,8 +235,8 @@ if (Serial.available() > 0)
 
   bool co2High = (co2 > CO2_THRESHOLD);
 
-  // ===== LDR / Lamp =====
-  // Relay inverse: LOW = ON
+  // ===== LDR / Lampe =====
+  // Relais inversé : LOW = ON
   if(!modeManuel)
 {
   digitalWrite(lampPin, lampState ? LOW : HIGH);
@@ -276,7 +276,7 @@ digitalWrite(pompePin, pompeActive ? LOW : HIGH);
 
   }
 
-  // ===== CO2 Alarm =====
+  // ===== Alarme CO2 =====
   if (co2High) {
 
     co2AlarmActive = true;
@@ -303,7 +303,7 @@ digitalWrite(pompePin, pompeActive ? LOW : HIGH);
     }
   }
 
-  // ===== Fan + Window =====
+  // ===== Ventilateur + Fenêtre =====
   if(!modeManuel)
 {
   if (co2High || temperature > 32 || humidity < 40 || humidity > 80)
@@ -316,7 +316,7 @@ digitalWrite(pompePin, pompeActive ? LOW : HIGH);
   }
 }
 
-  // ===== Serial Monitor =====
+  // ===== Moniteur série =====
   Serial.print("Temp: ");
   Serial.print(temperature);
 
